@@ -1,6 +1,7 @@
 package org.dprl.anyphoc4s
 
-import org.dprl.anyphoc4s.splits.{Split, Geo2DSplit}
+import org.dprl.anyphoc4s.model.{Geo2DToken, Token}
+import org.dprl.anyphoc4s.splits.{Geo2DSplit, Split}
 
 trait TestMembership[A <: Split, B <: Token] {
 

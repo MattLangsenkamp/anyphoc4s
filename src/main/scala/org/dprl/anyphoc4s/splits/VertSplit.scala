@@ -1,6 +1,6 @@
 package org.dprl.anyphoc4s.splits
 import org.dprl.anyphoc4s.geo.Geo.*
-import org.dprl.anyphoc4s.{Geo2DMeta, Geo2DToken, Geo2DTokenSet, VertSpec}
+import org.dprl.anyphoc4s.model.{Geo2DMeta, Geo2DToken, Geo2DTokenSet, VertSpec}
 import org.locationtech.jts.geom.{Geometry, Polygon}
 
 case class VertSplit(levelNum: Int, splitNum: Int, spec: VertSpec, tokenSet: Geo2DTokenSet) extends Geo2DSplit {

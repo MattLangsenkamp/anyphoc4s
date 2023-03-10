@@ -12,6 +12,6 @@ lazy val root = (project in file("."))
       "org.locationtech.jts" % "jts-modules" % "1.19.0" pomOnly(),
       "org.locationtech.jts.io" % "jts-io-common" % "1.19.0",
       "org.apache.pdfbox" % "pdfbox" % "2.0.27",
-      "com.github.geirolz" %% "advxml-core" % "2.5.1",
+      "com.github.geirolz" %% "advxml-core" % "2.5.1"
     )
   )

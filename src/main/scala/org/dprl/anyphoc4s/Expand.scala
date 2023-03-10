@@ -1,7 +1,8 @@
 package org.dprl.anyphoc4s
 
+import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DTokenSet, HorzSpec, Spec, TokenSet, VertSpec}
 import org.dprl.anyphoc4s.splits.Split
-import org.dprl.anyphoc4s.splits.{VertSplit, HorzSplit, EllipseSplit}
+import org.dprl.anyphoc4s.splits.{EllipseSplit, HorzSplit, VertSplit}
 
 trait Expand[A <: Spec, B <: TokenSet, C <: Split] {
   def expand(spec: A, tokenSet: B): List[List[C]]
@@ -10,10 +11,10 @@ trait Expand[A <: Spec, B <: TokenSet, C <: Split] {
 object Expand {
   def apply[A <: Spec, B <: TokenSet, C <: Split](implicit ev: Expand[A, B, C]): Expand[A, B, C] = ev
 
-  def instance[A <: Spec, B <: TokenSet, C <: Split](f: (Int, Int, A, B) => C): Expand[A, B, C] =
-    (spec: A, tokenSet: B) => (1 to spec.numLevels)
+  private def instance[A <: Spec, B <: TokenSet, C <: Split](f: (Int, Int, A, B) => C): Expand[A, B, C] =
+    (spec: A, tokenSet: B) => (1 to spec.numLevels by (spec.skipStep + 1))
       .map { l =>
-        (0 to l)
+        (1 to l)
           .map(s =>
             f(l, s, spec, tokenSet)
           ).toList

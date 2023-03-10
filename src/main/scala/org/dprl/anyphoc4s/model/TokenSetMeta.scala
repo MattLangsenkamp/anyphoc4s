@@ -1,5 +1,6 @@
-package org.dprl.anyphoc4s
+package org.dprl.anyphoc4s.model
 
+import org.dprl.anyphoc4s.model.TokenSetMeta
 import org.dprl.anyphoc4s.geo.BoundingBox
 
 trait TokenSetMeta 

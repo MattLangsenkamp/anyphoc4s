@@ -1,4 +1,6 @@
-package org.dprl.anyphoc4s
+package org.dprl.anyphoc4s.model
+
+import org.dprl.anyphoc4s.model.Phoc
 
 case class PartialPhoc(map: Map[String, List[Byte]]) {
   def toPhoc: Phoc =

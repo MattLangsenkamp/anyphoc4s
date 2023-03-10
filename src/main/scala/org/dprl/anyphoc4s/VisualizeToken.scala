@@ -1,5 +1,6 @@
 package org.dprl.anyphoc4s
 import org.dprl.anyphoc4s.geo.*
+import org.dprl.anyphoc4s.model.{Geo2DSpec, Geo2DToken, Spec, Token}
 import org.locationtech.jts.geom.{Point, Polygon}
 
 trait VisualizeToken[A <: Token, B <: Spec] {

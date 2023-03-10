@@ -1,7 +1,8 @@
-package org.dprl.anyphoc4s
+package org.dprl.anyphoc4s.model
 
-import org.dprl.anyphoc4s.Geo2DRepr.*
 import org.dprl.anyphoc4s.geo.BoundingBox
+import org.dprl.anyphoc4s.model.Geo2DRepr.*
+import org.dprl.anyphoc4s.model.{Geo2DRepr, Token}
 import org.locationtech.jts.geom.Geometry
 
 

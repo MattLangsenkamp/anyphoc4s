@@ -1,5 +1,7 @@
 package org.dprl.anyphoc4s
 
+import org.dprl.anyphoc4s.geo.Source
+import org.dprl.anyphoc4s.model.{Spec, TokenSet}
 import org.dprl.anyphoc4s.splits.Split
 
 import scala.util.{Failure, Success, Try}

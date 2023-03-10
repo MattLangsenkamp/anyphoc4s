@@ -1,7 +1,8 @@
 package org.dprl.anyphoc4s
-
+import org.dprl.*
 import org.dprl.anyphoc4s.geo.BoundingBox
-import org.dprl.anyphoc4s.splits.{HorzSplit, VertSplit}
+import org.dprl.anyphoc4s.model.{Geo2DMeta, Geo2DTokenSet, HorzSpec, Spec, VertSpec}
+import org.dprl.anyphoc4s.splits.{Geo2DSplit, HorzSplit, VertSplit}
 
 import java.io.{File, IOException}
 
@@ -10,14 +11,12 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val vertPhoc = Spec.prep[Geo2DTokenSet, VertSpec, VertSplit](VertSpec(numLevels = 1, 0, name = "name"))
-    val horzPhoc = Spec.prep[Geo2DTokenSet, HorzSpec, HorzSplit](HorzSpec(1, 0, name = "name"))
+    println((1 to 1 by 1).toArray.mkString("Array(", ", ", ")"))
 
-    val phoc = ComposeSpecs.composeSpecs[Geo2DTokenSet](List(vertPhoc, horzPhoc))(new Geo2DTokenSet(Geo2DMeta(BoundingBox(1, 1, 2, 2)), List(), None, None))
+    val vertPhoc = Spec.prep[Geo2DTokenSet, VertSpec, VertSplit](VertSpec(numLevels = 1, name = "name"))
+    val horzPhoc = Spec.prep[Geo2DTokenSet, HorzSpec, HorzSplit](HorzSpec(numLevels = 1, name = "name"))
+
+    val phoc = ComposeSpecs.composeSpecs[Geo2DTokenSet](List(vertPhoc, horzPhoc))(new Geo2DTokenSet(Geo2DMeta(BoundingBox(1, 1, 2, 2)), List()))
     println(phoc)
-
-    for (c <- 0 until 1) {
-      println(c)
-    }
   }
 }
