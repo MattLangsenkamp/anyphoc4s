@@ -1,4 +1,4 @@
-package org.dprl.anyphoc4s.geo
+package org.dprl.anyphoc4s.model
 
 
 sealed trait Source

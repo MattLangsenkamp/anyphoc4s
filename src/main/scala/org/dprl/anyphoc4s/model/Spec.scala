@@ -43,6 +43,16 @@ case class EllipseSpec(startLevel: Int = 1,
                        repr: Geo2DRepr = LINE,
                        name: String) extends Geo2DSpec
 
+case class RectSpec(startLevel: Int = 1,
+                       skipStep: Int = 0,
+                       numLevels: Int,
+                       rotateDegree: Float = 0,
+                       glueToHeight: Boolean = true,
+                       glueToWidth: Boolean = true,
+                       glueToLarger: Boolean = false,
+                       scaleFactor: Float = 0,
+                       repr: Geo2DRepr = LINE,
+                       name: String) extends Geo2DSpec
 object Spec {
   def prep[A <: TokenSet, B <: Spec, C <: Split](s: B)
                                                 (using exp: Expand[B, A, C])

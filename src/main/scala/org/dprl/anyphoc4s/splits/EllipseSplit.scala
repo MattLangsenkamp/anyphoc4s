@@ -2,8 +2,10 @@ package org.dprl.anyphoc4s.splits
 
 import org.dprl.anyphoc4s.geo.Geo.*
 import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DMeta, Geo2DToken, Geo2DTokenSet}
-import org.locationtech.jts.geom.{Coordinate, Geometry, GeometryFactory, Polygon, PrecisionModel}
+import org.locationtech.jts.geom.{Coordinate, Geometry, GeometryFactory, MultiPolygon, Polygon, PrecisionModel}
 import org.locationtech.jts.geom.util.AffineTransformation
+import org.locationtech.jts.util.GeometricShapeFactory
+import math.abs
 
 case class EllipseSplit(levelNum: Int, splitNum: Int, spec: EllipseSpec, tokenSet: Geo2DTokenSet) extends Geo2DSplit {
   val meta: Geo2DMeta = tokenSet.tokenSetMeta
@@ -13,12 +15,12 @@ case class EllipseSplit(levelNum: Int, splitNum: Int, spec: EllipseSpec, tokenSe
     if (splitNum == 0) {
       val firstCircle: Polygon = getCircle(levelNum, splitNum, nSpec, meta)
       meta.boundingBox.poly.difference(firstCircle).asInstanceOf[Polygon]
-    } else if (levelNum > splitNum) {
-      val innerCircle = getCircle(levelNum, splitNum + 1, nSpec, meta)
-      val outerCircle = getCircle(levelNum, splitNum, nSpec, meta)
+    } else if (levelNum > splitNum + 1) {
+      val innerCircle = getCircle(levelNum, splitNum, nSpec, meta)
+      val outerCircle = getCircle(levelNum, splitNum-1, nSpec, meta)
       outerCircle.difference(innerCircle).asInstanceOf[Polygon]
     } else {
-      getCircle(levelNum, splitNum, nSpec, meta)
+      getCircle(levelNum, splitNum-1, nSpec, meta)
     }
   }
 
@@ -42,50 +44,48 @@ case class EllipseSplit(levelNum: Int, splitNum: Int, spec: EllipseSpec, tokenSe
 
   private def getCircle(levelNum: Int, splitNum: Int, spec: EllipseSpec, meta: Geo2DMeta): Polygon = {
 
-    val gf = new GeometryFactory(new PrecisionModel())
-    val p = gf.createPoint(new Coordinate(meta.boundingBox.centroid.x, meta.boundingBox.centroid.y))
-    val rotateTrans = AffineTransformation.rotationInstance(spec.rotateDegree)
-    val (fSplits, scaleTrans) = spec match {
+    val fact = new GeometricShapeFactory()
+
+    fact.setRotation(spec.rotateDegree.toRadians)
+    fact.setCentre(new Coordinate(meta.boundingBox.centroid.x, meta.boundingBox.centroid.y))
+    val (xDist, yDist) = spec match {
       // Glue to both
       case EllipseSpec(_, _, _, _, true, true, false, _, _, _) =>
-        if (meta.boundingBox.height > meta.boundingBox.width) {
-          val splits = getCircleSteps(meta.boundingBox.centroid.x, meta.boundingBox.maxX, levelNum+1)
-          val nScaleFactor = meta.boundingBox.width / meta.boundingBox.height
-          val scaleTrans = AffineTransformation.scaleInstance(nScaleFactor, 1)
-          (splits, scaleTrans)
-        } else {
-          val splits = getCircleSteps(meta.boundingBox.centroid.y, meta.boundingBox.maxY, levelNum+1)
-          val nScaleFactor = meta.boundingBox.height / meta.boundingBox.width
-          val scaleTrans = AffineTransformation.scaleInstance(1, nScaleFactor)
-          (splits, scaleTrans)
-        }
+
+        val xSplits = getCircleSteps(meta.boundingBox.minX, meta.boundingBox.centroid.x, levelNum)
+        val ySplits = getCircleSteps(meta.boundingBox.minY, meta.boundingBox.centroid.y, levelNum)
+        val xDist_ = xSplits(splitNum)*2
+        val yDist_ = ySplits(splitNum)*2
+        (xDist_, yDist_)
       // Glue to height
       case EllipseSpec(_, _, _, _, true, _, _, scale, _, _) =>
-        val splits = getCircleSteps(meta.boundingBox.centroid.y, meta.boundingBox.maxY, levelNum+1)
-        val scaleTrans = AffineTransformation.scaleInstance(scale, 1)
-        (splits, scaleTrans)
-
+        val splits = getCircleSteps(meta.boundingBox.minY, meta.boundingBox.centroid.y, levelNum)
+        val yDist_ = splits(splitNum)*2
+        val xDist_ = yDist_ * scale
+        (xDist_, yDist_)
       // Glue to width
       case EllipseSpec(_, _, _, _, _, true, _, scale, _, _) =>
-        val splits = getCircleSteps(meta.boundingBox.centroid.x, meta.boundingBox.maxX, levelNum+1)
-        val scaleTrans = AffineTransformation.scaleInstance(1, scale)
-        (splits, scaleTrans)
-
+        val splits = getCircleSteps(meta.boundingBox.minX, meta.boundingBox.centroid.x, levelNum)
+        val xDist_ = splits(splitNum)*2
+        val yDist_ = xDist_ * scale
+        (xDist_, yDist_)
       // glue to larger
       case EllipseSpec(_, _, _, _, false, false, _, scale, _, _) =>
         if (meta.boundingBox.height > meta.boundingBox.width) {
-          val splits = getCircleSteps(meta.boundingBox.centroid.x, meta.boundingBox.maxX, levelNum+1)
-          val scaleTrans = AffineTransformation.scaleInstance(scale, 1)
-          (splits, scaleTrans)
+          val splits = getCircleSteps(meta.boundingBox.minY,meta.boundingBox.centroid.y, levelNum)
+          val yDist_ = splits(splitNum)*2
+          val xDist_ = yDist_ *scale
+          (xDist_, yDist_)
         } else {
-          val splits = getCircleSteps(meta.boundingBox.centroid.y, meta.boundingBox.maxY, levelNum+1)
-          val scaleTrans = AffineTransformation.scaleInstance(1, scale)
-          (splits, scaleTrans)
+          val splits = getCircleSteps(meta.boundingBox.minX, meta.boundingBox.centroid.x, levelNum)
+          val xDist_ = splits(splitNum)*2
+          val yDist_ = xDist_ * scale
+          (xDist_, yDist_)
         }
     }
-
-    rotateTrans.compose(scaleTrans).compose(rotateTrans).transform(
-      p.buffer(fSplits(splitNum)).asInstanceOf[Polygon]
-    ).asInstanceOf[Polygon]
+    // -1 is hack to make sure no multi-polygons are formed
+    fact.setWidth(xDist-1)
+    fact.setHeight(yDist-1)
+    fact.createEllipse()
   }
 }

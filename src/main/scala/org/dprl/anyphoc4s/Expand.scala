@@ -1,8 +1,9 @@
 package org.dprl.anyphoc4s
 
-import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DTokenSet, HorzSpec, Spec, TokenSet, VertSpec}
+import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DTokenSet, HorzSpec, Spec, TokenSet, VertSpec, RectSpec}
 import org.dprl.anyphoc4s.splits.Split
-import org.dprl.anyphoc4s.splits.{EllipseSplit, HorzSplit, VertSplit}
+import org.dprl.anyphoc4s.splits.{EllipseSplit, HorzSplit, VertSplit, RectSplit}
+import math.max
 
 trait Expand[A <: Spec, B <: TokenSet, C <: Split] {
   def expand(spec: A, tokenSet: B): List[List[C]]
@@ -12,9 +13,9 @@ object Expand {
   def apply[A <: Spec, B <: TokenSet, C <: Split](implicit ev: Expand[A, B, C]): Expand[A, B, C] = ev
 
   private def instance[A <: Spec, B <: TokenSet, C <: Split](f: (Int, Int, A, B) => C): Expand[A, B, C] =
-    (spec: A, tokenSet: B) => (1 to spec.numLevels by (spec.skipStep + 1))
+    (spec: A, tokenSet: B) => (max(spec.startLevel,2) to spec.numLevels by (spec.skipStep + 1))
       .map { l =>
-        (1 to l)
+        (0 until l)
           .map(s =>
             f(l, s, spec, tokenSet)
           ).toList
@@ -28,4 +29,7 @@ object Expand {
 
   given ellipseExpand: Expand[EllipseSpec, Geo2DTokenSet, EllipseSplit] =
     instance((l: Int, n: Int, s: EllipseSpec, b: Geo2DTokenSet) => EllipseSplit(l, n, s, b))
+
+  given rectExpand: Expand[RectSpec, Geo2DTokenSet, RectSplit] =
+    instance((l: Int, n: Int, s: RectSpec, b: Geo2DTokenSet) => RectSplit(l, n, s, b))
 }

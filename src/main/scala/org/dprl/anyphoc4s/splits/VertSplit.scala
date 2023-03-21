@@ -7,16 +7,23 @@ case class VertSplit(levelNum: Int, splitNum: Int, spec: VertSpec, tokenSet: Geo
   val meta: Geo2DMeta = tokenSet.tokenSetMeta
   lazy val phocRegion: Polygon = {
     assert(spec.angle < 90 && spec.angle > -90)
-    val tanAng = math.tan(math.toRadians(spec.angle)).asInstanceOf[Float]
-    meta.boundingBox.centroid.y
-    val totalSplits = levelNum + 1
+    val tanAng = math.tan(math.toRadians(spec.angle)).toFloat
+    val totalSplits = levelNum
     val linSpaceNum = totalSplits + 1
     val splits = linSpace(meta.boundingBox.minX, meta.boundingBox.maxX, linSpaceNum)
     val pos = if (spec.angle > 0) true else false
-    var x1Bottom = shiftPointFromTan(splits(splitNum), tanAng, meta.boundingBox.centroid.y, pos)
-    var x2Bottom = shiftPointFromTan(splits(splitNum + 1), tanAng, meta.boundingBox.centroid.y, pos)
-    var x1Top = shiftPointFromTan(splits(splitNum), tanAng, meta.boundingBox.centroid.y, !pos)
-    var x2Top = shiftPointFromTan(splits(splitNum + 1), tanAng, meta.boundingBox.centroid.y, !pos)
+    var (x1Bottom, x2Bottom, x1Top, x2Top) = if (splits.length > 1)
+      val x1Bottom_ = shiftPointFromTan(splits(splitNum), tanAng, meta.boundingBox.centroid.y, pos)
+      val x2Bottom_ = shiftPointFromTan(splits(splitNum+1), tanAng, meta.boundingBox.centroid.y, pos)
+      val x1Top_ = shiftPointFromTan(splits(splitNum), tanAng, meta.boundingBox.centroid.y, !pos)
+      val x2Top_ = shiftPointFromTan(splits(splitNum+1), tanAng, meta.boundingBox.centroid.y, !pos)
+      (x1Bottom_, x2Bottom_, x1Top_, x2Top_)
+    else
+      val x1Bottom_ = meta.boundingBox.minX
+      val x2Bottom_ = meta.boundingBox.maxX
+      val x1Top_ = meta.boundingBox.minX
+      val x2Top_ = meta.boundingBox.maxX
+      (x1Bottom_, x2Bottom_, x1Top_, x2Top_)
 
     val y1Bottom, y2Bottom = meta.boundingBox.minY
     val y1Top, y2Top = meta.boundingBox.maxY

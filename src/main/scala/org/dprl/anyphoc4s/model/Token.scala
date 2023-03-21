@@ -14,7 +14,7 @@ enum Geo2DRepr {
   case LINE, BBOX, CENTROID
 }
 
-case class Geo2DToken(key: String, boundingBox: BoundingBox) extends Token {
+case class Geo2DToken(key: String, boundingBox: BoundingBox, repr2d: Geo2DRepr) extends Token {
   def repr(r: Geo2DRepr): Geometry = r match {
     case LINE => boundingBox.line
     case BBOX => boundingBox.poly
