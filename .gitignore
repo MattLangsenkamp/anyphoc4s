@@ -1,3 +1,6 @@
 # scala
 .idea
 target
+src/test/*.html
+./*.html
+*.html

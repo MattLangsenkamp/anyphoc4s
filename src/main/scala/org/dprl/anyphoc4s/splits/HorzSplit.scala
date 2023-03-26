@@ -31,11 +31,9 @@ case class HorzSplit(levelNum: Int, splitNum: Int, spec: HorzSpec, tokenSet: Geo
 
     if (spec.angle < 0) {
       if (splitNum == 0)
-        y1Bottom = meta.boundingBox.minY
         y2Bottom = meta.boundingBox.minY
       if (splitNum == levelNum - 1)
         y1Top = meta.boundingBox.maxY
-        y2Top = meta.boundingBox.maxY
       polygonFromPoints(x1Bottom, y1Bottom, x2Bottom, y2Bottom, x1Top, y1Top, x2Top, y2Top)
         .intersection(meta.boundingBox.poly).asInstanceOf[Polygon]
     } else if (spec.angle > 0) {

@@ -7,7 +7,7 @@ import org.dprl.anyphoc4s.splits.{HorzSplit, VertSplit}
 import java.io.{File, PrintWriter}
 import scala.io.Source
 
-class noAngle extends munit.FunSuite {
+class horzNoAngle extends munit.FunSuite {
 
   val tokenizer: Tokenize[SVG, Geo2DTokenSetSpec, Geo2DTokenSet] = Tokenize[SVG, Geo2DTokenSetSpec, Geo2DTokenSet]
 

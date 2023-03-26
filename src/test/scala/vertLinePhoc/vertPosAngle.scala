@@ -7,7 +7,7 @@ import org.dprl.anyphoc4s.splits.VertSplit
 import java.io.{File, PrintWriter}
 import scala.io.Source
 
-class posAngle extends munit.FunSuite {
+class vertPosAngle extends munit.FunSuite {
 
   val tokenizer: Tokenize[SVG, Geo2DTokenSetSpec, Geo2DTokenSet] = Tokenize[SVG, Geo2DTokenSetSpec, Geo2DTokenSet]
 
