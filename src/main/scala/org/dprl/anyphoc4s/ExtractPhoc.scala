@@ -2,6 +2,7 @@ package org.dprl.anyphoc4s
 
 import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DToken, Geo2DTokenSet, PartialPhoc, Token, TokenSet}
 import org.dprl.anyphoc4s.splits.{EllipseSplit, Geo2DSplit, HorzSplit, Split, VertSplit}
+import Math.max
 
 trait ExtractPhoc[A <: TokenSet, B <: Split] {
   def extract(tokenSet: A, splits: List[List[B]]): PartialPhoc
@@ -13,7 +14,11 @@ object ExtractPhoc {
   private def standardInstance[A <: TokenSet, B <: Split](tokenSet: A, splits: List[List[B]], f: (B, Geo2DToken) => Byte): PartialPhoc =
     val phocs = tokenSet.tokens.foldLeft(Map[String, List[Byte]]())((m, word) => {
       val phoc = splits.flatMap(level => level.map(split => f(split, word.asInstanceOf[Geo2DToken])))
-      m + (word.key -> phoc)
+      // merge phocs
+      m.get(word.key) match
+        case Some(oldPhoc) => m + (word.key -> oldPhoc.zip(phoc).map((oldBit, newBit) => max(oldBit, newBit).toByte))
+        case None => m + (word.key -> phoc)
+
     })
     PartialPhoc(phocs)
 

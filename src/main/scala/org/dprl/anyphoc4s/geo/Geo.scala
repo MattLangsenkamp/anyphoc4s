@@ -15,7 +15,7 @@ object Geo {
    * @param gf the implicitly passed in GeometryFactory
    * @return a polygon representing the bounding box
    */
-  def polygonFromBoundingBox(boundingBox: BoundingBox)(using gf: GeometryFactory): Polygon = {
+  def polygonFromBoundingBox(boundingBox: BoundingBox)(implicit gf: GeometryFactory): Polygon = {
     val p1 = new Coordinate(boundingBox.minX,boundingBox.minY)
     val p2 = new Coordinate(boundingBox.maxX,boundingBox.minY)
     val p3 = new Coordinate(boundingBox.maxX,boundingBox.maxY)
@@ -32,7 +32,7 @@ object Geo {
    * @param gf the implicitly passed in GeometryFactory
    * @return a polygon representing the horizontal span centered at the centroid
    */
-  def lineFromBoundingBox(boundingBox: BoundingBox)(using gf: GeometryFactory): Polygon = {
+  def lineFromBoundingBox(boundingBox: BoundingBox)(implicit gf: GeometryFactory): Polygon = {
 
     val y = boundingBox.centroid.y
     val yTop = y + boundingBox.height/1000
@@ -148,7 +148,7 @@ object Geo {
    * @param point one dimension of the point
    * @param tanAng the tangent angle
    * @param adjacent the length of the adjacent side
-   * @param pos a flag dictating which way to adjust the dimension of the point
+   * @param pos a flag dictating which way to adjust the dimension of the point. Positive adjustment or negative
    * @return
    */
   def shiftPointFromTan(point: Double, tanAng: Double, adjacent: Double, pos: Boolean): Double =

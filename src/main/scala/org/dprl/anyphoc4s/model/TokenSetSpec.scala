@@ -11,5 +11,5 @@ enum TokenUnificationPolicy {
 class TokenSetSpec(unificationPolicy: TokenUnificationPolicy)
 
 case class Geo2DTokenSetSpec(unificationPolicy: TokenUnificationPolicy = TokenUnificationPolicy.PARTS,
-                        scale: Int = 1,
+                        scale: Double = 1,
                         repr: Geo2DRepr = Geo2DRepr.LINE) extends TokenSetSpec(unificationPolicy)

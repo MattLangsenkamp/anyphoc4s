@@ -7,6 +7,7 @@ lazy val root = (project in file("."))
     name := "anyphoc4s",
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-parse" % "0.3.8",
+      "org.scalameta" %% "munit" % "1.0.0-M6",
       "org.locationtech.jts" % "jts" % "1.19.0",
       "org.locationtech.jts" % "jts-core" % "1.19.0",
       "org.locationtech.jts" % "jts-io" % "1.19.0" pomOnly(),

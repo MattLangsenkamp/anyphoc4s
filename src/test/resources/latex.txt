@@ -1,0 +1,4 @@
+h_dom 	a + b + c + d + e + f + g + h
+v_dom 	\frac{\frac{a}{\frac{c}{d}}}{\frac{\frac{e}{f}}{g}}
+hv_dom 	\frac{\frac{a}{\frac{c}{d}}}{\frac{\frac{e}{f}}{g}}+a^2+40009\frac{g}{{f}_{{{a}_{f}}_{b}}}
+single  a

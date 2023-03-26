@@ -10,7 +10,6 @@ import org.dprl.svgbounds.model.Transformation.Matrix
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.NodeFilter
-
 import math.{max, min}
 import scala.collection.mutable
 import scala.util.Try
@@ -69,11 +68,12 @@ object Tokenize {
         minX = min(nRect.x, minX); minY = min(nRect.y, minY)
         maxX = max(nRect.width+nRect.x, maxX); maxY = max(nRect.height+nRect.y, maxY)
         bounds = bounds + Bounds(nRect.x, nRect.y, nRect.x + nRect.width, nRect.y + nRect.height)
-        Geo2DToken("-", BoundingBox(nRect.x, nRect.y, nRect.x + nRect.width, nRect.y + nRect.height), spec.repr)
+        Geo2DToken("-", BoundingBox(nRect.x, nRect.y, nRect.x + nRect.width, nRect.y + nRect.height, spec.scale), spec.repr)
 
       def parsePath(el: Element, matrix: Matrix): Option[Geo2DToken] =
         val label = if (el.hasAttr("data-c"))
-          Integer.parseInt(el.attr("data-c"), 16).toChar.toString
+          val dataCCode = el.attr("data-c").toLowerCase
+          String.valueOf(Character.toChars(Integer.parseInt(dataCCode, 16)))
         else "<UNK>"
         val d = el.attr("d")
         PathParse.svgPath.parse(d) match
@@ -88,7 +88,7 @@ object Tokenize {
             maxX = max(b.xMax, maxX);
             maxY = max(b.yMax, maxY)
             bounds = bounds + b
-            Some(Geo2DToken(label, BoundingBox(b.xMin, b.yMin, b.xMax, b.yMax), spec.repr))
+            Some(Geo2DToken(label, BoundingBox(b.xMin, b.yMin, b.xMax, b.yMax, spec.scale), spec.repr))
 
       def accountForSquareRoot(el: Element, label: String, b: Bounds, matrix: Matrix): Bounds =
         if (el.nextElementSibling() != null && label == "√" && el.nextElementSibling.nodeName() == "rect")
