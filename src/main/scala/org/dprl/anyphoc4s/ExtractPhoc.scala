@@ -1,7 +1,8 @@
 package org.dprl.anyphoc4s
 
 import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DToken, Geo2DTokenSet, PartialPhoc, Token, TokenSet}
-import org.dprl.anyphoc4s.splits.{EllipseSplit, Geo2DSplit, HorzSplit, Split, VertSplit}
+import org.dprl.anyphoc4s.splits.{EllipseSplit, Geo2DSplit, HorzSplit, RectSplit, Split, VertSplit}
+
 import Math.max
 
 trait ExtractPhoc[A <: TokenSet, B <: Split] {
@@ -33,6 +34,10 @@ object ExtractPhoc {
   given standardEllipseExtract: ExtractPhoc[Geo2DTokenSet, EllipseSplit] with
     override def extract(tokenSet: Geo2DTokenSet, splits: List[List[EllipseSplit]]): PartialPhoc =
       standardInstance[Geo2DTokenSet, EllipseSplit](tokenSet, splits, TestMembership[Geo2DSplit, Geo2DToken].test)
+
+  given standardRectExtract: ExtractPhoc[Geo2DTokenSet, RectSplit] with
+    override def extract(tokenSet: Geo2DTokenSet, splits: List[List[RectSplit]]): PartialPhoc =
+      standardInstance[Geo2DTokenSet, RectSplit](tokenSet, splits, TestMembership[Geo2DSplit, Geo2DToken].test)
 
   /*given quadTreeExtract: ExtractPhoc[Geo2DTokenSet, Geo2DSplit] with
     override def extract(tokenSet: Geo2DTokenSet, splits: List[List[VertSplit]]): PartialPhoc =

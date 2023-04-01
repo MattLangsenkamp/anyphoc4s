@@ -1,6 +1,6 @@
 package horzLinePhoc
 
-import org.dprl.anyphoc4s.{ComposeSpecs, Tokenize, Visualize}
+import org.dprl.anyphoc4s.{Compose, Tokenize, Visualize}
 import org.dprl.anyphoc4s.model.{Geo2DRepr, Geo2DSpec, Geo2DTokenSet, Geo2DTokenSetSpec, HorzSpec, Phoc, SVG, Spec, VertSpec}
 import org.dprl.anyphoc4s.splits.{HorzSplit, VertSplit}
 
@@ -13,13 +13,13 @@ class horzNoAngle extends munit.FunSuite {
 
   def getPhoc(level: Int, svgName: String, visName: Option[String] = None): Phoc =
     val svg = SVG(Source.fromResource(svgName).mkString)
-    val vertPhoc = Spec.prep[Geo2DTokenSet, HorzSpec, HorzSplit](HorzSpec(numLevels = level, name = "VertSpec"))
+    val vertPhoc = HorzSpec(endLevel = level, name = "VertSpec")
     val tokenSet = tokenizer.convert(svg, Geo2DTokenSetSpec(repr = Geo2DRepr.BBOX))
 
     visName.foreach { s =>
       val str = Visualize[Geo2DTokenSet, Geo2DSpec, SVG].visualize(
         tokenSet,
-        List(HorzSpec(numLevels = level, name = "HorzSpec")),
+        List(HorzSpec(endLevel = level, name = "HorzSpec")),
         svg
       )
       val writer = new PrintWriter(new File(s))
@@ -27,7 +27,7 @@ class horzNoAngle extends munit.FunSuite {
       writer.close()
     }
 
-    ComposeSpecs.composeSpecs[Geo2DTokenSet](List(vertPhoc))(tokenSet)
+    Compose[Geo2DTokenSet, Geo2DSpec].compose(List(vertPhoc))(tokenSet)
 
   test("L2 vertical dominant svg") {
 
@@ -79,7 +79,7 @@ class horzNoAngle extends munit.FunSuite {
   }
 
   test("L5 vertical dominant svg") {
-    val phoc = getPhoc(5, "v_dom.svg", Some("yea.html"))
+    val phoc = getPhoc(5, "v_dom.svg")
 
     val dTruth = Map(
       "𝑎" -> List(1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0),

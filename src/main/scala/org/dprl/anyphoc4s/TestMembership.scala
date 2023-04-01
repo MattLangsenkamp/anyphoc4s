@@ -17,7 +17,7 @@ object TestMembership {
     override def test(split: Geo2DSplit, token: Geo2DToken): Byte =
       if (split.phocRegion.contains(token.boundingBox.poly)) {
         1
-      } else if (split.phocRegion.intersects(token.boundingBox.poly)) {
+      } else if (split.phocRegion.intersects(token.repr(token.repr2d))) {
         1
       } else {
         0

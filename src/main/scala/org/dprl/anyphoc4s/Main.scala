@@ -16,14 +16,14 @@ object Main {
   def main(args: Array[String]): Unit = {
 
     val svg = SVG(Source.fromResource("B362.svg").mkString)
-    val vertPhoc = Spec.prep[Geo2DTokenSet, VertSpec, VertSplit](VertSpec(numLevels = 2, name = "VertSpec"))
-    val horzPhoc = Spec.prep[Geo2DTokenSet, HorzSpec, HorzSplit](HorzSpec(numLevels = 1, name = "HorzSplit"))
+    val vertPhoc = VertSpec(endLevel = 2)
+    val horzPhoc = HorzSpec(endLevel = 1)
     val tokenSet = Tokenize[SVG, Geo2DTokenSetSpec, Geo2DTokenSet].convert(svg, Geo2DTokenSetSpec(repr = Geo2DRepr.BBOX, scale = 1.0))
-    val phoc = ComposeSpecs.composeSpecs[Geo2DTokenSet](List(vertPhoc, horzPhoc))(tokenSet)
+    val phoc = Compose[Geo2DTokenSet, Geo2DSpec].compose(List(vertPhoc, horzPhoc))(tokenSet)
     println(phoc)
     val str = Visualize[Geo2DTokenSet, Geo2DSpec, SVG].visualize(
       tokenSet,
-      List(VertSpec(numLevels = 3, name = "VertSpec")),
+      List(VertSpec(endLevel = 3, name = "VertSpec")),
       svg
     )
 

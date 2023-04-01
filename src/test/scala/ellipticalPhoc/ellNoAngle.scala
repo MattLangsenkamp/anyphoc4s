@@ -1,7 +1,7 @@
 package ellipticalPhoc
 
-import org.dprl.anyphoc4s.{ComposeSpecs, Tokenize, Visualize}
-import org.dprl.anyphoc4s.model.{Geo2DRepr, Geo2DSpec, Geo2DTokenSet, Geo2DTokenSetSpec, EllipseSpec, Phoc, SVG, Spec}
+import org.dprl.anyphoc4s.{Compose, Tokenize, Visualize}
+import org.dprl.anyphoc4s.model.{EllipseSpec, Geo2DRepr, Geo2DSpec, Geo2DTokenSet, Geo2DTokenSetSpec, Phoc, SVG, Spec}
 import org.dprl.anyphoc4s.splits.EllipseSplit
 
 import java.io.{File, PrintWriter}
@@ -13,13 +13,13 @@ class ellNoAngle extends munit.FunSuite {
 
   def getPhoc(level: Int, svgName: String, visName: Option[String] = None): Phoc =
     val svg = SVG(Source.fromResource(svgName).mkString)
-    val vertPhoc = Spec.prep[Geo2DTokenSet, EllipseSpec, EllipseSplit](EllipseSpec(numLevels = level))
+    val vertPhoc = EllipseSpec(endLevel = level)
     val tokenSet = tokenizer.convert(svg, Geo2DTokenSetSpec(repr = Geo2DRepr.BBOX))
 
     visName.foreach { s =>
       val str = Visualize[Geo2DTokenSet, Geo2DSpec, SVG].visualize(
         tokenSet,
-        List(EllipseSpec(numLevels = level)),
+        List(EllipseSpec(endLevel = level)),
         svg
       )
       val writer = new PrintWriter(new File(s))
@@ -27,7 +27,7 @@ class ellNoAngle extends munit.FunSuite {
       writer.close()
     }
 
-    ComposeSpecs.composeSpecs[Geo2DTokenSet](List(vertPhoc))(tokenSet)
+    Compose[Geo2DTokenSet, Geo2DSpec].compose(List(vertPhoc))(tokenSet)
 
   test("L2 vertical dominant svg") {
     val phoc = getPhoc(level = 2, svgName = "v_dom.svg")
