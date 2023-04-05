@@ -10,29 +10,29 @@ import org.jsoup.parser.Tag
 
 trait Visualize[A <: TokenSet, B <: Spec, C <: Source] {
 
-  def visualize(tokenSet: A, levels: List[B], source: C): String
+  def visualize(tokenSet: A, levels: List[B], source: C, firstBit: Boolean = true): String
 }
 object Visualize {
 
   def apply[A <: TokenSet, B <: Spec, C <: Source](using ev: Visualize[A, B, C]): Visualize[A, B, C] = ev
 
   given svgVisualize: Visualize[Geo2DTokenSet, Geo2DSpec, SVG] with
-    def visualize(tokenSet: Geo2DTokenSet, specs: List[Geo2DSpec], source: SVG): String =
+    def visualize(tokenSet: Geo2DTokenSet, specs: List[Geo2DSpec], source: SVG, firstBit: Boolean = true): String =
       val htmlDoc = Jsoup.parse("<html><body></body></html>")
       htmlDoc.outputSettings().prettyPrint(true)
       val doc = htmlDoc.body()
       // append top level split
-      val topLevelSplit = new Element(Tag.valueOf("div"), "")
-      topLevelSplit.attr("style", "display: flex; flex-direction: row; justify-content: space-between")
-      val html = Jsoup.parse(source.contents)
-      val svg = html.body().child(0)
-      svg.attr("style", "margin: auto;")
-      svg.attr("width", "600px")
-      svg.removeAttr("height")
-      svg.append(tokenSet.tokenSetMeta.boundingBox.poly.toSVG(fillColor = "red"))
-      topLevelSplit.appendChild(svg)
-      doc.appendChild(topLevelSplit)
-
+      if (firstBit)
+        val topLevelSplit = new Element(Tag.valueOf("div"), "")
+        topLevelSplit.attr("style", "display: flex; flex-direction: row; justify-content: space-between")
+        val html = Jsoup.parse(source.contents)
+        val svg = html.body().child(0)
+        svg.attr("style", "margin: auto;")
+        svg.attr("width", "600px")
+        svg.removeAttr("height")
+        svg.append(tokenSet.tokenSetMeta.boundingBox.poly.toSVG(fillColor = "red"))
+        topLevelSplit.appendChild(svg)
+        doc.appendChild(topLevelSplit)
 
       // append spec level splits
       val specSplits = new Element(Tag.valueOf("div"), "")

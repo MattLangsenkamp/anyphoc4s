@@ -20,7 +20,8 @@ class levelSkipping extends munit.FunSuite {
       val str = Visualize[Geo2DTokenSet, Geo2DSpec, SVG].visualize(
         tokenSet,
         List( VertSpec( endLevel = level, skipStep = skipStep, startLevel = startLevel ) ),
-        svg
+        svg,
+        firstBit
       )
       val writer = new PrintWriter( new File( s ) )
       writer.print( str )
@@ -119,7 +120,7 @@ class levelSkipping extends munit.FunSuite {
   }
 
   test( "L5 horizontal-vertical dominant less symbols svg first level skipped start at level 3 skip every two level" ) {
-    val phoc = getPhoc( 9, svgName = "hv_dom_less_sym.svg", firstBit = false, startLevel = 3, skipStep = 2 )
+    val phoc = getPhoc( 9, svgName = "hv_dom_less_sym.svg", firstBit = false, startLevel = 3, skipStep = 2, Some("testt.html") )
 
     val dTruth: Map[String, List[Byte]] = Map(
       "𝑎" -> List( 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0 ),

@@ -53,11 +53,3 @@ case class RectSpec(startLevel: Int = 1,
                     scaleFactor: Float = 0,
                     repr: Geo2DRepr = LINE,
                     name: String = "RectSpec") extends Geo2DSpec
-object Spec {
-  def prep[A <: TokenSet, B <: Spec, C <: Split](s: B)
-                                                (using exp: Expand[B, A, C])
-                                                (using ext: ExtractPhoc[A, C]): (A => PartialPhoc) = b => {
-    val expanded = exp.expand(s, b)
-    ext.extract(b, expanded)
-  }
-}

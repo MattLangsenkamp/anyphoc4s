@@ -9,5 +9,9 @@ trait Split
 
 trait Geo2DSplit extends Split {
   def phocRegion: Polygon
+
+  def levelNum: Int
+
+  def splitNum: Int
 }
 

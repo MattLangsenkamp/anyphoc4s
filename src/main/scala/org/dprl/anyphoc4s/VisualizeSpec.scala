@@ -28,7 +28,7 @@ object VisualizeSpec {
       specDiv.attr("style", "display: flex; flex-direction: column;")
       levels.foreach { l =>
         val levelSvg = svg.clone()
-        levelSvg.attr("width", "600px")
+        levelSvg.attr("width", "500px")
         levelSvg.removeAttr("height")
         l.zipWithIndex.foreach { (s, i) =>
           levelSvg.append(VisualizeSplit[Geo2DSplit].visualize(s, i))
