@@ -16,7 +16,7 @@ object Main {
   def main(args: Array[String]): Unit = {
 
 
-    import com.github.plokhotnyuk.rtree2d.core._
+    /*import com.github.plokhotnyuk.rtree2d.core._
     import EuclideanPlane._
 
     val box1 = entry(0f, 0f, 2.5f, 5f, "Box 1")
@@ -30,10 +30,10 @@ object Main {
     println(rtree.searchAll(2f, 2f, 3f, 3f).map(_.value))
     println(rtree.searchAll(4f, 0f, 5f, 1f).map(_.value))
 
-    println((List(1,2,3) ::: (List(4)) ::: (1 :: Nil) ))
+    println((List(1,2,3) ::: (List(4)) ::: (1 :: Nil) ))*/
 
 
-    /*val svg = SVG(Source.fromResource("B362.svg").mkString)
+    val svg = SVG(Source.fromResource("polygonExample2.svg").mkString)
     val vertSpec = VertSpec(endLevel = 4)
     val horzSpec = HorzSpec(endLevel = 3)
     val rectSpec = RectSpec(endLevel = 4)
@@ -43,6 +43,7 @@ object Main {
     val specList = List(vertSpec, rectSpec, horzSpec, ellipseSpec)
     val phoc = Compose[Geo2DTokenSet, Geo2DSpec].compose(specList)(tokenSet)
     println(phoc)
+    println(phoc.map.toSeq.map(_._1))
     val str = Visualize[Geo2DTokenSet, Geo2DSpec, SVG].visualize(
       tokenSet,
       specList,
@@ -52,7 +53,7 @@ object Main {
     //println(str)
     val writer = new PrintWriter(new File("test.html"))
     writer.print(str)
-    writer.close()*/
+    writer.close()
   }
 
   def time[R](block: => R)(message: String): R = {

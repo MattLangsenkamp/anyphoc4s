@@ -1,0 +1,22 @@
+<svg style="vertical-align: -2.185ex;" xmlns="http://www.w3.org/2000/svg" width="4.37ex" height="4.37ex" role="img"
+     focusable="false" viewBox="0 -965.8 1931.5 1931.5">
+    <g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)">
+        <g data-mml-node="math">
+            <g data-mml-node="mstyle" style="border: 3px white solid;" transform="translate(165.8,0)">
+                <polygon points="-170.8,970.8 1770.8,970.8 1605,805 -5,805" stroke="none" fill="white"></polygon>
+                <polygon points="1770.8,-970.8 1770.8,970.8 1605,805 1605,-805" stroke="none" fill="white"></polygon>
+                <polygon points="-170.8,-970.8 1770.8,-970.8 1605,-805 -5,-805" stroke="none" fill="white"></polygon>
+                <polygon points="-170.8,-970.8 -170.8,970.8 -5,805 -5,-805" stroke="none" fill="white"></polygon>
+                <g data-mml-node="mpadded">
+                    <g transform="translate(800,0)">
+                        <g data-mml-node="mstyle" fill="black" stroke="black">
+                            <g data-mml-node="TeXAtom" data-mjx-texclass="ORD">
+                                <g data-mml-node="mstyle" transform="scale(1.2)"></g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
